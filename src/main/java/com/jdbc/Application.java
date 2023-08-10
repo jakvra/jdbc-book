@@ -1,37 +1,32 @@
 package com.jdbc;
 
-import org.vibur.dbcp.ViburDBCPDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public class Application {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
 
-        // Creating the connection with HSQLDB
-        String db = "jdbc:hsqldb:file:~/marco/hsqldb";
-        String user = "root";
-        String password = "password";
-
-        DataSource dataSource = createDataSource(db, user, password);
+        DataSource dataSource = createDataSource();
 
         try (Connection connection = dataSource.getConnection()) {
+
             System.out.println("connection.isValid(0) = " + connection.isValid(0));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+
     }
 
-    private static DataSource createDataSource(String db, String user, String password) {
-        ViburDBCPDataSource ds = new ViburDBCPDataSource();
-        ds.setJdbcUrl(db);
-        ds.setUsername(user);
-        ds.setPassword(password);
-        ds.start();
-        return ds;
+    private static DataSource createDataSource() {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl("jdbc:h2:~/mydatabase");
+        dataSource.setUsername("sa");
+        dataSource.setPassword("somePassword");
+        return dataSource;
     }
 }
