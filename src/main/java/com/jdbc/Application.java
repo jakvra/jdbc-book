@@ -1,6 +1,6 @@
 package com.jdbc;
 
-import org.h2.jdbcx.JdbcDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -23,9 +23,9 @@ public class Application {
     }
 
     private static DataSource createDataSource() {
-        JdbcDataSource dataSource = new JdbcDataSource();
-        dataSource.setURL("jdbc:h2:~/mydatabase");
-        dataSource.setUser("sa");
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl("jdbc:h2:~/mydatabase");
+        dataSource.setUsername("sa");
         dataSource.setPassword("somePassword");
         return dataSource;
     }
