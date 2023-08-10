@@ -1,14 +1,17 @@
 package com.jdbc;
 
+import org.h2.jdbcx.JdbcDataSource;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 
 public class Application {
 
     public static void main(String[] args) {
 
-        try (Connection connection = DriverManager
-                .getConnection("jdbc:h2:~/mydatabase", "sa", "somePassword")) {
+        DataSource dataSource = createDataSource();
+
+        try (Connection connection = dataSource.getConnection()) {
 
             System.out.println("connection.isValid(0) = " + connection.isValid(0));
 
@@ -16,5 +19,15 @@ public class Application {
             e.printStackTrace();
         }
 
+
     }
+
+    private static DataSource createDataSource() {
+        JdbcDataSource dataSource = new JdbcDataSource();
+        dataSource.setURL("jdbc:h2:~/mydatabase");
+        dataSource.setUser("sa");
+        dataSource.setPassword("somePassword");
+        return dataSource;
+    }
+
 }
