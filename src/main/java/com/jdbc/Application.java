@@ -7,9 +7,8 @@ public class Application {
 
     public static void main(String[] args) {
 
-        // create and connect to the H2 in memory database
         try (Connection connection = DriverManager
-                .getConnection("jdbc:h2:mem:", "sa", "somePassword")) {
+                .getConnection("jdbc:h2:~/mydatabase", "sa", "somePassword")) {
 
             System.out.println("connection.isValid(0) = " + connection.isValid(0));
 
