@@ -16,6 +16,19 @@ public class Application {
 
         try (Connection connection = dataSource.getConnection()) {
 
+            // update
+            try (PreparedStatement stmt = connection.prepareStatement("UPDATE USERS SET first_name = CONCAT(FIRST_NAME,?) WHERE id > ?")) {
+
+                stmt.setString(1, "-yay");
+                stmt.setInt(2, 5);
+
+                int rowsUpdated = stmt.executeUpdate();
+
+                System.out.println("I just updated " + rowsUpdated + " rows");
+
+            }
+
+            // select
             try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM USERS")) { // return the auto-generated keys
 
                 ResultSet rs = stmt.executeQuery();
