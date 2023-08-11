@@ -31,6 +31,8 @@ public class Application {
             // select
             try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM USERS")) { // return the auto-generated keys
 
+                stmt.setFetchSize(50);
+
                 ResultSet rs = stmt.executeQuery();
 
                 while (rs.next()) {
