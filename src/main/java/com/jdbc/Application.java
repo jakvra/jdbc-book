@@ -1,6 +1,8 @@
 package com.jdbc;
 
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
+import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -8,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 
+@Slf4j
 public class Application {
 
     public static void main(String[] args) {
@@ -56,10 +59,20 @@ public class Application {
     }
 
     private static DataSource createDataSource() {
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:h2:~/mydatabase;INIT=RUNSCRIPT FROM 'classpath:schema.sql'");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("somePassword");
-        return dataSource;
+        HikariDataSource hikariDs = new HikariDataSource();
+        hikariDs.setJdbcUrl("jdbc:h2:~/mydatabase;INIT=RUNSCRIPT FROM 'classpath:schema.sql'");
+        hikariDs.setUsername("sa");
+        hikariDs.setPassword("somePassword");
+
+        DataSource proxyDataSource = ProxyDataSourceBuilder.create(hikariDs)
+//                .name("MyDS")
+//                .asJson()
+                .countQuery()
+//                .logQueryBySlf4j()
+                .logQueryToSysOut()
+                .multiline()
+                .build();
+
+        return proxyDataSource;
     }
 }
