@@ -23,9 +23,9 @@ public class Application {
 
     private static DataSource createDataSource() {
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:mysql://localhost/MY_DATABASE?serverTimezone=UTC");
-        dataSource.setUsername("admin");
-        dataSource.setPassword("admin");
+        dataSource.setJdbcUrl("jdbc:h2:~/mydatabase");
+        dataSource.setUsername("sa");
+        dataSource.setPassword("somePassword");
         return dataSource;
     }
 }
