@@ -5,9 +5,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.ResultSet;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 public class Application {
 
@@ -17,26 +16,19 @@ public class Application {
 
         try (Connection connection = dataSource.getConnection()) {
 
-            try (PreparedStatement stmt = connection.prepareStatement(
-                    "INSERT INTO USERS (FIRST_NAME, LAST_NAME, REGISTRATION_DATE) VALUES (?, ?, ?)"
-                    , Statement.RETURN_GENERATED_KEYS)) { // return the auto-generated keys
+            try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM USERS")) { // return the auto-generated keys
 
-                stmt.setString(1, "John");
-                stmt.setString(2, "Doe");
-                stmt.setObject(3, LocalDateTime.now());
+                ResultSet rs = stmt.executeQuery();
 
-                stmt.addBatch();
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String firstName = rs.getString("first_name");
+                    String lastName = rs.getString("last_name");
+                    LocalDateTime registrationDate = rs.getObject("registration_date", LocalDateTime.class);
 
-//                stmt.clearParameters();
+                    System.out.println("Found user: " + id + " | " + firstName + " | " + lastName + " | " + registrationDate);
+                }
 
-                stmt.setString(1, "Another John");
-                stmt.setString(2, "Another Doe");
-                stmt.setObject(3, LocalDateTime.now());
-
-                stmt.addBatch();
-
-                int[] numberOfInsertedRows = stmt.executeBatch();
-                System.out.println("Arrays.toString(numberOfInsertedRows) = " + Arrays.toString(numberOfInsertedRows));
             }
 
             System.out.println("connection.isValid(0) = "
